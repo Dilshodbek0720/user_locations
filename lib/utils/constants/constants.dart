@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 const String adminEmail = "admin@gmail.com";
 
 const defaultImageConstant = "Select Image";
@@ -11,3 +12,17 @@ class TimeOutConstants {
   static int receiveTimeout = 25;
   static int sendTimeout = 60;
 }
+
+const List<MapType> maps = [
+  MapType.terrain,
+  MapType.normal,
+  MapType.hybrid,
+  MapType.satellite,
+];
+
+Map<dynamic,dynamic> mapsTypeName = {
+  MapType.terrain.name: "terrain",
+  MapType.normal.name: "normal",
+  MapType.hybrid.name: "hybrid",
+  MapType.satellite.name: "satellite",
+};
