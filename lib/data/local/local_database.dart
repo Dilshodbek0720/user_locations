@@ -18,7 +18,7 @@ class LocalDatabase {
     if (_database != null) {
       return _database!;
     } else {
-      _database = await _initDB("addres.db");
+      _database = await _initDB("address.db");
       return _database!;
     }
   }
@@ -73,15 +73,18 @@ class LocalDatabase {
   //   );
   // }
 
-  // static updateNews({required NewsModelSql newsModelSql}) async {
-  //   final db = await getInstance.database;
-  //   db.update(
-  //     NewsModelFields.table_name,
-  //     newsModelSql.toJson(),
-  //     where: "${NewsModelFields.id} = ?",
-  //     whereArgs: [newsModelSql.id],
-  //   );
-  // }
+  static updateAddress({required AddressModel addressModel}) async {
+    final db = await getInstance.database;
+    print("Failed SQL");
+    await db.update(AddressModelFields.tableName, addressModel.toJson(), where: '${AddressModelFields.id}=?', whereArgs: [addressModel.id]);
+    // db.update(
+    //   AddressModelFields.tableName,
+    //   addressModel.toJson(),
+    //   where: "${AddressModelFields.id} = ?",
+    //   whereArgs: [addressModel.id],
+    // );
+    print("Update SQL");
+  }
 
   static Future<int> deleteAddress(int id) async {
     final db = await getInstance.database;

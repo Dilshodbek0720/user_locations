@@ -31,7 +31,7 @@ class _AddressKindSelectorState extends State<AddressKindSelector> {
         return DropdownMenuItem<String>(
           value: value,
           child: Container(
-            margin: const EdgeInsets.only(left: 5),
+            margin: const EdgeInsets.only(left: 3),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),

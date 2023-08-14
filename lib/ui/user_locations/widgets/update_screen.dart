@@ -7,18 +7,18 @@ import 'package:user_locations/provider/location_user_provider.dart';
 import 'package:user_locations/ui/map/widgets/address_king_selector.dart';
 import 'package:user_locations/ui/map/widgets/address_lang_selector.dart';
 import 'package:user_locations/ui/map/widgets/map_type_selector.dart';
-import '../../provider/address_call_provider.dart';
-import '../user_locations/user_locations.dart';
 
-class MapScreen extends StatefulWidget {
-  const MapScreen({super.key, required this.latLong});
+import '../../../provider/address_call_provider.dart';
 
-  final LatLng latLong;
+class UpdateScreen extends StatefulWidget {
+  const UpdateScreen({super.key, required this.addressModel});
+
+  final AddressModel addressModel;
   @override
-  State<MapScreen> createState() => _MapScreenState();
+  State<UpdateScreen> createState() => _UpdateScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _UpdateScreenState extends State<UpdateScreen> {
   late CameraPosition initialCameraPosition;
   late CameraPosition currentCameraPosition;
   bool onCameraMoveStarted = false;
@@ -30,12 +30,12 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     initialCameraPosition = CameraPosition(
-      target: widget.latLong,
+      target: LatLng(double.parse(widget.addressModel.lat), double.parse(widget.addressModel.long)),
       zoom: 13,
     );
 
     currentCameraPosition = CameraPosition(
-      target: widget.latLong,
+      target: LatLng(double.parse(widget.addressModel.lat), double.parse(widget.addressModel.long)),
       zoom: 13,
     );
     super.initState();
@@ -47,19 +47,14 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         toolbarHeight: 50,
         backgroundColor: Colors.black,
-        title: const Text("Google Map"),
+        title: const Text("Update Screen"),
         actions: [
           MapTypeSelector(onTap: (v) {
             setState(() {
               mapType = v!;
             });
           },),
-          IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return const UserLocationsScreen();
-            }));
-          }, icon: const Icon(Icons.maps_ugc_sharp)),
-          const SizedBox(width: 5,)
+          const SizedBox(width: 15,)
         ],
       ),
       body: Stack(
@@ -122,21 +117,22 @@ class _MapScreenState extends State<MapScreen> {
             child: AddressLangSelector(),
           ),
           Positioned(
-            bottom: 15,
+              bottom: 15,
               left: MediaQuery.of(context).size.width/2-32,
               child: Visibility(
                 visible: context.watch<AddressCallProvider>().canSaveAddress(),
                 child: Container(
-                  height: 64,
-                  width: 64,
-                  decoration: const BoxDecoration(
-                      color: Colors.black,
-                    shape: BoxShape.circle
-                  ),
-                    child: IconButton(onPressed: (){
+                    height: 64,
+                    width: 64,
+                    decoration: const BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle
+                    ),
+                    child: IconButton(onPressed: () async{
                       AddressCallProvider adp =
                       Provider.of<AddressCallProvider>(context, listen: false);
-                      context.read<LocationUserProvider>().insertLocationUser(addressModel: AddressModel(address: adp.scrolledAddressText, lat: currentCameraPosition.target.latitude.toString(), long: currentCameraPosition.target.longitude.toString()),);
+                      await context.read<LocationUserProvider>().updateLocationUser(addressModel: AddressModel(id: widget.addressModel.id,address: adp.scrolledAddressText, lat: currentCameraPosition.target.latitude.toString(), long: currentCameraPosition.target.longitude.toString()),);
+                      if(context.mounted) Navigator.pop(context);
                     }, icon: const Icon(Icons.add, color: Colors.white,size: 30,),)),
               )),
           Align(

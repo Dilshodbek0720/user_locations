@@ -19,11 +19,12 @@ class _AddressLangSelectorState extends State<AddressLangSelector> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      borderRadius: BorderRadius.circular(16),
+      padding: const EdgeInsets.symmetric(horizontal: 3),
       value: dropdownValue,
-      elevation: 16,
+      elevation: 8,
       style: const TextStyle(color: Colors.white),
       onChanged: (String? value) {
-        // This is called when the user selects an item.
         setState(() {
           dropdownValue = value!;
         });
@@ -34,9 +35,10 @@ class _AddressLangSelectorState extends State<AddressLangSelector> {
         return DropdownMenuItem<String>(
           value: value,
           child: Container(
-              padding: const EdgeInsets.all(8),
+              margin: const EdgeInsets.only(left: 3),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(16),
                 color: Colors.green,
               ),
               child: Text(value)),

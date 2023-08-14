@@ -39,3 +39,10 @@ const List<String> langList = [
   "en_GB",
   "tr_TR",
 ];
+
+const List<String> language = [
+  "Uzbek",
+  "Rus",
+  "Ingliz",
+  "Turk"
+];

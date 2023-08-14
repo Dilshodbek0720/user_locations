@@ -27,6 +27,13 @@ class LocationUserProvider with ChangeNotifier{
     notifyListeners();
   }
 
+  updateLocationUser({required AddressModel addressModel})async{
+    print("Update Provider");
+    await LocalDatabase.updateAddress(addressModel: addressModel);
+    await getLocationUser();
+    notifyListeners();
+  }
+
   // deleteAllLocationUsers({required BuildContext context})async{
   //   showLoading(context: context);
   //   await LocalDatabase.deleteAllLocationUsers();
