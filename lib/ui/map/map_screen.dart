@@ -1,13 +1,14 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:user_locations/data/local/local_database.dart';
 import 'package:user_locations/data/model/adress_model.dart';
 import 'package:user_locations/provider/location_user_provider.dart';
-import 'package:user_locations/user_locations/user_locations.dart';
+import 'package:user_locations/ui/map/widgets/address_king_selector.dart';
 import 'package:user_locations/utils/constants/constants.dart';
+
+import '../../provider/address_call_provider.dart';
+import '../user_locations/user_locations.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key, required this.latLong});
@@ -48,12 +49,12 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         toolbarHeight: 50,
         backgroundColor: Colors.black,
-        title: Text("Google Map"),
+        title: const Text("Google Map"),
         actions: [
           DropdownButtonHideUnderline(
               child: DropdownButton(
                 borderRadius: BorderRadius.circular(16),
-                icon: Icon(Icons.layers_outlined, color: Colors.white,),
+                icon: const Icon(Icons.layers_outlined, color: Colors.white,),
                 onChanged: (v) {
                   setState(() {
                     mapType = v!;
@@ -77,10 +78,10 @@ class _MapScreenState extends State<MapScreen> {
           ),
           IconButton(onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context){
-              return UserLocationsScreen();
+              return const UserLocationsScreen();
             }));
-          }, icon: Icon(Icons.maps_ugc_sharp)),
-          SizedBox(width: 5,)
+          }, icon: const Icon(Icons.maps_ugc_sharp)),
+          const SizedBox(width: 5,)
         ],
       ),
       body: Stack(
@@ -93,6 +94,9 @@ class _MapScreenState extends State<MapScreen> {
             onCameraIdle: () {
               debugPrint(
                   "CURRENT CAMERA POSITION: ${currentCameraPosition.target.latitude}");
+              context
+                  .read<AddressCallProvider>()
+                  .getAddressByLatLong(latLng: currentCameraPosition.target);
               setState(() {
                 onCameraMoveStarted = false;
               });
@@ -115,19 +119,44 @@ class _MapScreenState extends State<MapScreen> {
             },
             initialCameraPosition: initialCameraPosition,
           ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Text(
+                context.watch<AddressCallProvider>().scrolledAddressText,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: const TextStyle(
+                  fontSize: 22,
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: AddressKindSelector(),
+          ),
           Positioned(
             bottom: 15,
               left: MediaQuery.of(context).size.width/2-32,
-              child: Container(
-                height: 64,
-                width: 64,
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                  shape: BoxShape.circle
-                ),
-                  child: IconButton(onPressed: ()async{
-                    context.read<LocationUserProvider>().insertLocationUser(addressModel: AddressModel(address: "Toshkent", lat: currentCameraPosition.target.latitude.toString(), long: currentCameraPosition.target.longitude.toString()),);
-                  }, icon: Icon(Icons.add, color: Colors.white,size: 30,),))),
+              child: Visibility(
+                visible: context.watch<AddressCallProvider>().canSaveAddress(),
+                child: Container(
+                  height: 64,
+                  width: 64,
+                  decoration: const BoxDecoration(
+                      color: Colors.black,
+                    shape: BoxShape.circle
+                  ),
+                    child: IconButton(onPressed: (){
+                      AddressCallProvider adp =
+                      Provider.of<AddressCallProvider>(context, listen: false);
+                      context.read<LocationUserProvider>().insertLocationUser(addressModel: AddressModel(address: adp.scrolledAddressText, lat: currentCameraPosition.target.latitude.toString(), long: currentCameraPosition.target.longitude.toString()),);
+                    }, icon: const Icon(Icons.add, color: Colors.white,size: 30,),)),
+              )),
           Align(
             child: Icon(
               Icons.location_pin,

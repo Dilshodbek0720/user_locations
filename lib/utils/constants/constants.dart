@@ -3,9 +3,8 @@ const String adminEmail = "admin@gmail.com";
 
 const defaultImageConstant = "Select Image";
 
-const baseUrl = "https://fcm.googleapis.com";
-const String apiKey =
-    "key=AAAA-LFxSgk:APA91bEgUJ52n7LtLoKOxFGAl04pfdhyx-j-UiAD0yGjwCPdRcr3_12wMRb1t8C9NcX4M-nQtOpYy4_39V-jnvA1AjzPuksznYIgtuTsxVtuR3QuyPjsgy__RRsUkUlkvfEFFZIthmmO";
+const baseUrl = "https://geocode-maps.yandex.ru";
+const String apiKey = "0966317a-0c56-4ae7-a7ee-eda74212af4d";
 
 class TimeOutConstants {
   static int connectTimeout = 30;
@@ -26,3 +25,17 @@ Map<dynamic,dynamic> mapsTypeName = {
   MapType.hybrid.name: "hybrid",
   MapType.satellite.name: "satellite",
 };
+
+const List<String> kindList = [
+  "house",
+  "metro",
+  "district",
+  "street",
+];
+
+const List<String> langList = [
+  "uz_UZ",
+  "ru_RU",
+  "en_GB",
+  "tr_TR",
+];
