@@ -40,9 +40,9 @@ const List<String> langList = [
   "tr_TR",
 ];
 
-const List<String> language = [
-  "Uzbek",
-  "Rus",
-  "Ingliz",
-  "Turk"
-];
+Map<String, String> language = {
+  "uz_UZ" : "Uzbek",
+  "ru_RU" : "Rus",
+  "en_GB" : "Ingliz",
+  "tr_TR" : "Turk"
+};
