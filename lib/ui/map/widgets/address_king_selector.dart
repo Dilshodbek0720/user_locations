@@ -37,7 +37,7 @@ class _AddressKindSelectorState extends State<AddressKindSelector> {
                 borderRadius: BorderRadius.circular(16),
                 color: Colors.green,
               ),
-              child: Text(value)),
+              child: Text(value.substring(0,1).toUpperCase()+value.substring(1))),
         );
       }).toList(),
     );

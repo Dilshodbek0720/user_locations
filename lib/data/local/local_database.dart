@@ -63,16 +63,6 @@ class LocalDatabase {
     return allAddress;
   }
 
-  // static updateNewsAuthor({required int id, required String author}) async {
-  //   final db = await getInstance.database;
-  //   db.update(
-  //     NewsModelFields.table_name,
-  //     {NewsModelFields.author: author},
-  //     where: "${NewsModelFields.id} = ?",
-  //     whereArgs: [id],
-  //   );
-  // }
-
   static updateAddress({required AddressModel addressModel}) async {
     final db = await getInstance.database;
     print("Failed SQL");

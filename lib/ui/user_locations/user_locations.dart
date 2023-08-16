@@ -33,7 +33,7 @@ class _UserLocationsScreenState extends State<UserLocationsScreen> {
                           return UpdateScreen(addressModel: provider.locationUser[index]);
                         }));
                       },
-                      title: Text("Address:  ${provider.locationUser[index].address}", style: TextStyle(fontSize: 20),),
+                      title: Text("Address:  ${provider.locationUser[index].address}", style: const TextStyle(fontSize: 20),),
                       subtitle: Text("Latitude: ${provider.locationUser[index].lat.substring(0,6)}  Longitude: ${provider.locationUser[index].long.substring(0,6)}"),
                       trailing: IconButton(onPressed: () async{
                         provider.deleteLocationUser(id: context.read<LocationUserProvider>().locationUser[index].id!);

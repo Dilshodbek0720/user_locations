@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:location/location.dart';
 import 'package:user_locations/data/model/adress_model.dart';
+import 'package:user_locations/provider/location_provider.dart';
 import 'package:user_locations/provider/location_user_provider.dart';
 import 'package:user_locations/ui/map/widgets/address_king_selector.dart';
 import 'package:user_locations/ui/map/widgets/address_lang_selector.dart';
@@ -18,14 +21,18 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
+Set<Marker> markers = {};
+
 class _MapScreenState extends State<MapScreen> {
   late CameraPosition initialCameraPosition;
   late CameraPosition currentCameraPosition;
+  static CameraPosition currentPosition = CameraPosition(target: LatLng(41.26431679638257,69.23665791749954), zoom: 13);
+  static CameraPosition initialPosition = CameraPosition(target: LatLng(41.27983980636389,69.23507642000915), zoom: 13);
   bool onCameraMoveStarted = false;
   MapType mapType = MapType.normal;
 
-  final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+
 
   @override
   void initState() {
@@ -38,8 +45,51 @@ class _MapScreenState extends State<MapScreen> {
       target: widget.latLong,
       zoom: 13,
     );
+    context.read<LocationProvider>().getLocation();
+    // getPolyPoints();
+    getCurrentLocation();
     super.initState();
   }
+
+  List<LatLng> polylineCoordinates = [];
+  LocationData? locationData;
+
+  void getCurrentLocation() async{
+    Location location = Location();
+
+
+    // GoogleMapController googleMapController = await _controller.future;
+
+    location.getLocation().then((location) {
+      locationData = location;
+    });
+    location.onLocationChanged.listen((newLocation) {
+      locationData = newLocation;
+
+      // googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      //   zoom: 13,
+      //     target: LatLng(newLocation.latitude!, newLocation.longitude!))),
+      // );
+      setState(() { });
+    });
+  }
+
+  // void getPolyPoints() async{
+  //   PolylinePoints polylinePoints = PolylinePoints();
+  //
+  //   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+  //       "AIzaSyDfTnv0dUVfo3Mg_NJOAUoZDaUXUqYK76c",
+  //       PointLatLng(initialPosition.target.latitude, initialPosition.target.longitude),
+  //       PointLatLng(currentPosition.target.latitude, currentPosition.target.longitude)
+  //   );
+  //
+  //   if(result.points.isNotEmpty){
+  //     result.points.forEach((PointLatLng point) {
+  //       return polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  //     });
+  //   }
+  //   setState(() { });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +119,24 @@ class _MapScreenState extends State<MapScreen> {
             onCameraMove: (CameraPosition cameraPosition) {
               currentCameraPosition = cameraPosition;
             },
+            markers: markers,
+            // {
+            //   Marker(
+            //       markerId: MarkerId("currentLocation"),
+            //       position: LatLng(locationData!.latitude!,locationData!.longitude!),
+            //   ),
+            //   Marker(
+            //       markerId: MarkerId("source"),
+            //       position: initialPosition.target
+            //   ),
+            //   Marker(
+            //     markerId: MarkerId("source"),
+            //     position: currentPosition.target
+            //   )
+            // },
             onCameraIdle: () {
               debugPrint(
-                  "CURRENT CAMERA POSITION: ${currentCameraPosition.target.latitude}");
+                  "CURRENT CAMERA POSITION: ${currentCameraPosition.target.latitude} ${currentCameraPosition.target.longitude}");
               context
                   .read<AddressCallProvider>()
                   .getAddressByLatLong(latLng: currentCameraPosition.target);

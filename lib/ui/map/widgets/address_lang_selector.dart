@@ -41,7 +41,7 @@ class _AddressLangSelectorState extends State<AddressLangSelector> {
                 borderRadius: BorderRadius.circular(16),
                 color: Colors.green,
               ),
-              child: Text(value)),
+              child: Text(language[value]!)),
         );
       }).toList(),
     );

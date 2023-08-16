@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:user_locations/data/network/api_service.dart';
 import 'package:user_locations/provider/address_call_provider.dart';
+import 'package:user_locations/provider/location_provider.dart';
 import 'package:user_locations/provider/location_user_provider.dart';
 import 'package:user_locations/ui/splash/splash_screen.dart';
 
@@ -15,6 +16,9 @@ Future<void> main() async {
       ),
       ChangeNotifierProvider(
           create: (context) => AddressCallProvider(apiService: ApiService())
+      ),
+      ChangeNotifierProvider(
+          create: (context) => LocationProvider()
       )
     ],
     child: MainApp(),));
